@@ -28,8 +28,16 @@
       <div v-if="error" class="error">{{ error }}</div>
 
       <ul class="habit-list">
-        <li v-for="habit in (habits || [])" :key="habit.id" class="habit-item">
+        <li v-for="(habit, index) in (habits || [])" :key="habit.id"
+            class="habit-item"
+            draggable="true"
+            :class="{ 'dragging': dragSrcIndex === index }"
+            @dragstart="onDragStart($event, index)"
+            @dragover="onDragOver"
+            @drop="onDrop($event, index)"
+            @dragend="onDragEnd">
           <template v-if="editingId !== habit.id">
+            <span class="drag-handle">&#9776;</span>
             <span class="habit-name">{{ habit.name }}</span>
             <div class="habit-actions">
               <button class="habit-edit-btn" @click="startEdit(habit)">Editar</button>

@@ -446,6 +446,8 @@ h1 {
 .habit-delete-btn { padding: 4px 10px; background: #fee2e2; color: #dc2626; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; }
 .habit-delete-btn:hover { background: #fecaca; }
 .habit-empty { color: #9ca3af; font-size: 14px; text-align: center; padding: 16px 0; }
+.drag-handle { color: #cbd5e1; cursor: grab; font-size: 14px; padding: 0 6px 0 0; user-select: none; }
+.habit-item.dragging { opacity: 0.4; }
 
 .day-note-section {
   margin-top: 20px;

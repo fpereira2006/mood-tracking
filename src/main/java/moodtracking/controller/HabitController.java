@@ -24,7 +24,7 @@ public class HabitController {
     @GetMapping
     public List<Habit> findAll() {
         return repository.findAll().stream()
-                .sorted(Comparator.comparing(h -> h.getCreatedAt() == null ? "" : h.getCreatedAt()))
+                .sorted(Comparator.comparingInt(h -> h.getPosition() == null ? Integer.MAX_VALUE : h.getPosition()))
                 .toList();
     }
 
@@ -38,8 +38,26 @@ public class HabitController {
         if (habit.getCreatedAt() == null) {
             habit.setCreatedAt(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
         }
+        if (habit.getPosition() == null) {
+            int max = repository.findAll().stream()
+                    .mapToInt(h -> h.getPosition() == null ? 0 : h.getPosition())
+                    .max().orElse(0);
+            habit.setPosition(max + 1);
+        }
 
         return ResponseEntity.ok(repository.save(habit));
+    }
+
+    @PutMapping("/reorder")
+    public ResponseEntity<Void> reorder(@RequestBody List<Long> ids) {
+        for (int i = 0; i < ids.size(); i++) {
+            final int position = i;
+            repository.findById(ids.get(i)).ifPresent(h -> {
+                h.setPosition(position);
+                repository.save(h);
+            });
+        }
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")

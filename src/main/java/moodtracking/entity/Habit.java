@@ -16,6 +16,9 @@ public class Habit {
     @Column(name = "created_at")
     private String createdAt;
 
+    @Column(name = "position")
+    private Integer position;
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -24,4 +27,7 @@ public class Habit {
 
     public String getCreatedAt() { return createdAt; }
     public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
+
+    public Integer getPosition() { return position; }
+    public void setPosition(Integer position) { this.position = position; }
 }

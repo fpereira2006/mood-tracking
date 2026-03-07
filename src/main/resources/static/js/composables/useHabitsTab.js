@@ -6,6 +6,7 @@ export function useHabitsTab() {
   const editingId = ref(null)
   const editingName = ref('')
   const error = ref('')
+  const dragSrcIndex = ref(null)
 
   async function loadHabits() {
     try {
@@ -74,5 +75,39 @@ export function useHabitsTab() {
     await loadHabits()
   }
 
-  return { habits, newHabitName, editingId, editingName, error, loadHabits, addHabit, startEdit, saveEdit, cancelEdit, onNewHabitKeyup, onEditKeyup, deleteHabit }
+  function onDragStart(e, index) {
+    dragSrcIndex.value = index
+    e.dataTransfer.effectAllowed = 'move'
+  }
+
+  function onDragOver(e) {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
+  }
+
+  function onDrop(e, targetIndex) {
+    e.preventDefault()
+    const src = dragSrcIndex.value
+    if (src === null || src === targetIndex) return
+    const list = [...habits.value]
+    const [moved] = list.splice(src, 1)
+    list.splice(targetIndex, 0, moved)
+    habits.value = list
+    dragSrcIndex.value = null
+    saveOrder()
+  }
+
+  function onDragEnd() {
+    dragSrcIndex.value = null
+  }
+
+  async function saveOrder() {
+    await fetch('/habits/reorder', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(habits.value.map(h => h.id)),
+    })
+  }
+
+  return { habits, newHabitName, editingId, editingName, error, dragSrcIndex, loadHabits, addHabit, startEdit, saveEdit, cancelEdit, onNewHabitKeyup, onEditKeyup, deleteHabit, onDragStart, onDragOver, onDrop, onDragEnd }
 }
