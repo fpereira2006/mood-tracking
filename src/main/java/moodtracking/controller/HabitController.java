@@ -24,7 +24,10 @@ public class HabitController {
     @GetMapping
     public List<Habit> findAll() {
         return repository.findAll().stream()
-                .sorted(Comparator.comparingInt(h -> h.getPosition() == null ? Integer.MAX_VALUE : h.getPosition()))
+                .sorted(Comparator
+                        .comparingInt((Habit h) -> h.getPriority() == null ? Integer.MIN_VALUE : h.getPriority())
+                        .reversed()
+                        .thenComparingInt(h -> h.getPosition() == null ? Integer.MAX_VALUE : h.getPosition()))
                 .toList();
     }
 
@@ -35,6 +38,11 @@ public class HabitController {
                 : new Habit();
 
         habit.setName(request.name());
+        if (request.priority() != null) {
+            habit.setPriority(request.priority());
+        } else if (habit.getPriority() == null) {
+            habit.setPriority(5);
+        }
         if (habit.getCreatedAt() == null) {
             habit.setCreatedAt(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
         }

@@ -19,6 +19,9 @@ public class Habit {
     @Column(name = "position")
     private Integer position;
 
+    @Column(name = "priority")
+    private Integer priority;
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -30,4 +33,7 @@ public class Habit {
 
     public Integer getPosition() { return position; }
     public void setPosition(Integer position) { this.position = position; }
+
+    public Integer getPriority() { return priority; }
+    public void setPriority(Integer priority) { this.priority = priority; }
 }

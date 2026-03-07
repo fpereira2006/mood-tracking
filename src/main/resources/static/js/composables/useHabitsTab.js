@@ -3,8 +3,10 @@ import { ref } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
 export function useHabitsTab() {
   const habits = ref([])
   const newHabitName = ref('')
+  const newHabitPriority = ref(5)
   const editingId = ref(null)
   const editingName = ref('')
+  const editingPriority = ref(5)
   const error = ref('')
   const dragSrcIndex = ref(null)
 
@@ -26,10 +28,11 @@ export function useHabitsTab() {
     const res = await fetch('/habits', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name }),
+      body: JSON.stringify({ name, priority: newHabitPriority.value }),
     })
     if (res.ok) {
       newHabitName.value = ''
+      newHabitPriority.value = 5
       await loadHabits()
     } else {
       error.value = 'Erro ao adicionar hábito.'
@@ -39,6 +42,7 @@ export function useHabitsTab() {
   function startEdit(habit) {
     editingId.value = habit.id
     editingName.value = habit.name
+    editingPriority.value = habit.priority ?? 5
   }
 
   async function saveEdit() {
@@ -47,7 +51,7 @@ export function useHabitsTab() {
     const res = await fetch('/habits', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: editingId.value, name }),
+      body: JSON.stringify({ id: editingId.value, name, priority: editingPriority.value }),
     })
     if (res.ok) {
       editingId.value = null
@@ -109,5 +113,10 @@ export function useHabitsTab() {
     })
   }
 
-  return { habits, newHabitName, editingId, editingName, error, dragSrcIndex, loadHabits, addHabit, startEdit, saveEdit, cancelEdit, onNewHabitKeyup, onEditKeyup, deleteHabit, onDragStart, onDragOver, onDrop, onDragEnd }
+  function priorityColor(p) {
+    const hue = Math.round(120 - ((p - 1) / 9) * 120)
+    return `hsl(${hue}, 80%, 45%)`
+  }
+
+  return { habits, newHabitName, newHabitPriority, editingId, editingName, editingPriority, error, dragSrcIndex, loadHabits, addHabit, startEdit, saveEdit, cancelEdit, onNewHabitKeyup, onEditKeyup, deleteHabit, onDragStart, onDragOver, onDrop, onDragEnd, priorityColor }
 }

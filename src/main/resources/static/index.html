@@ -23,6 +23,7 @@
     <div class="card" v-if="activeTab === 'habits'">
       <div class="habit-add-row">
         <input class="habit-input" v-model="newHabitName" placeholder="Nome do hábito" @keyup="onNewHabitKeyup" />
+        <input class="priority-input" type="number" v-model.number="newHabitPriority" min="1" max="10" title="Prioridade (1-10)" />
         <button class="save-btn" @click="addHabit">Adicionar</button>
       </div>
       <div v-if="error" class="error">{{ error }}</div>
@@ -38,6 +39,9 @@
             @dragend="onDragEnd">
           <template v-if="editingId !== habit.id">
             <span class="drag-handle">&#9776;</span>
+            <span class="priority-badge" :style="{ backgroundColor: priorityColor(habit.priority ?? 5) }">
+              {{ habit.priority ?? 5 }}
+            </span>
             <span class="habit-name">{{ habit.name }}</span>
             <div class="habit-actions">
               <button class="habit-edit-btn" @click="startEdit(habit)">Editar</button>
@@ -46,6 +50,7 @@
           </template>
           <template v-else>
             <input class="habit-input" v-model="editingName" @keyup="onEditKeyup" />
+            <input class="priority-input" type="number" v-model.number="editingPriority" min="1" max="10" />
             <div class="habit-actions">
               <button class="save-btn" @click="saveEdit">Salvar</button>
               <button class="habit-delete-btn" @click="cancelEdit">Cancelar</button>
