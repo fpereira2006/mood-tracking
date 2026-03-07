@@ -13,9 +13,20 @@
     <h1>Rotina</h1>
 
     <div class="tabs">
-      <button :class="['tab-btn', { active: activeTab === 'mood' }]" @click="switchTab('mood')">Registro de
-        Humor</button>
+      <button :class="['tab-btn', { active: activeTab === 'mood' }]" @click="switchTab('mood')">Registro de Humor</button>
+      <button :class="['tab-btn', { active: activeTab === 'habits' }]" @click="switchTab('habits')">Hábitos</button>
+      <button :class="['tab-btn', { active: activeTab === 'sleep' }]" @click="switchTab('sleep')">Sono</button>
       <button :class="['tab-btn', { active: activeTab === 'week' }]" @click="switchTab('week')">Visão Semanal</button>
+    </div>
+
+    <!-- Habits Tab -->
+    <div class="card" v-if="activeTab === 'habits'">
+      <p class="coming-soon">Em breve</p>
+    </div>
+
+    <!-- Sleep Tab -->
+    <div class="card" v-if="activeTab === 'sleep'">
+      <p class="coming-soon">Em breve</p>
     </div>
 
     <!-- Mood Tracking Tab -->

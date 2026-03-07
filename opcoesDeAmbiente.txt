@@ -1,0 +1,36 @@
+Opções de ambiente na nuvem para Spring Boot + SQLite
+======================================================
+
+RECOMENDAÇÃO: Railway
+- Deploy direto do GitHub, detecta Spring Boot automaticamente
+- Suporta volumes persistentes (necessário para SQLite)
+- ~$5/mês no plano Hobby (tem trial grátis)
+- Mais prático de todos — zero configuração de servidor
+
+ALTERNATIVAS
+
+Fly.io
+- Suporte excelente a SQLite (tem LiteFS para replicação)
+- Free tier generoso, ~$3–5/mês para uso leve
+- Requer flyctl CLI e Dockerfile — um pouco mais de setup
+
+Oracle Cloud Always Free
+- VM ARM gratuita para sempre (1 core, 1GB RAM)
+- Você gerencia o servidor, mas SQLite funciona perfeitamente
+- Mais trabalhoso de configurar, mas custo zero permanente
+
+NÃO RECOMENDADO PARA SQLITE
+
+Heroku
+- Filesystem efêmero, perde o banco a cada deploy
+
+Google Cloud Run / AWS Lambda
+- Stateless, sem disco persistente
+
+Render
+- Disco persistente só no plano pago ($7/mês), menos prático que Railway
+
+RESUMO
+- Praticidade  → Railway
+- Custo zero   → Oracle Cloud Free Tier
+- Mais controle → Fly.io
