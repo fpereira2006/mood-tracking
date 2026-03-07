@@ -420,3 +420,83 @@ h1 {
   flex-direction: column;
   gap: 8px;
 }
+
+/* Responsive */
+@media (max-width: 480px) {
+  body {
+    padding: 16px 8px;
+  }
+
+  .card {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  h1 {
+    font-size: 1.2rem;
+  }
+
+  .tabs {
+    width: 100%;
+  }
+
+  .tab-btn {
+    flex: 1;
+    padding: 8px 10px;
+    font-size: 0.8rem;
+  }
+
+  .emoji-btn {
+    padding: 5px 6px;
+    font-size: 1.15rem;
+  }
+
+  .week-table {
+    font-size: 0.75rem;
+  }
+
+  .week-table th,
+  .week-table td {
+    padding: 5px 2px;
+  }
+
+  .week-table thead th:first-child {
+    width: 36px;
+  }
+
+  .week-table tbody td {
+    font-size: 1rem;
+    min-width: 32px;
+    height: 36px;
+  }
+
+  .save-row {
+    flex-wrap: wrap;
+  }
+
+  .save-btn,
+  .generate-btn {
+    flex: 1;
+    padding: 10px 8px;
+    font-size: 0.85rem;
+  }
+
+  .prompt-textarea {
+    height: 200px;
+  }
+
+  .modal-box {
+    padding: 16px;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+  }
+
+  .copy-btn,
+  .close-btn {
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+  }
+}
