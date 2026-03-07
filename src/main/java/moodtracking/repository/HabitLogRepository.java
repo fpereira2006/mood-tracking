@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface HabitLogRepository extends JpaRepository<HabitLog, Long> {
     List<HabitLog> findByDate(String date);
     Optional<HabitLog> findByDateAndHabitId(String date, Long habitId);
+    List<HabitLog> findByDateBetween(String startDate, String endDate);
 }

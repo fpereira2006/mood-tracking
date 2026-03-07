@@ -12,6 +12,7 @@ export function useWeekView({ todayStr }) {
   const weekNote     = ref('')
   const weekNoteSaved = ref(false)
   const weekDayNotes  = ref({})
+  const weekHabitLogs = ref({})
 
   const weekDays = computed(() => {
     return Array.from({ length: 7 }, (_, i) => {
@@ -80,8 +81,8 @@ export function useWeekView({ todayStr }) {
   }
 
   async function loadWeek() {
-    const days = weekDays.value
     try {
+      const days = weekDays.value
       const [entriesRes, dayNotesRes] = await Promise.all([
         fetch(`/mood/week?start=${days[0]}&end=${days[6]}`),
         fetch(`/mood/day-notes?start=${days[0]}&end=${days[6]}`),
@@ -102,6 +103,20 @@ export function useWeekView({ todayStr }) {
     } catch (e) {
       // silently ignore
     }
+
+    try {
+      const days = weekDays.value
+      const habitLogsRes = await fetch(`/habit-logs/week?start=${days[0]}&end=${days[6]}`)
+      const habitLogsData = await habitLogsRes.json()
+      const hlMap = {}
+      habitLogsData.forEach(l => {
+        if (!hlMap[l.habitId]) hlMap[l.habitId] = {}
+        hlMap[l.habitId][l.date] = l.status
+      })
+      weekHabitLogs.value = hlMap
+    } catch (e) {
+      // silently ignore
+    }
   }
 
   function prevWeek() {
@@ -118,12 +133,20 @@ export function useWeekView({ todayStr }) {
     loadWeek()
   }
 
+  function weekHabitStatusIcon(status) {
+    if (status === 'DONE') return '✅'
+    if (status === 'NOT_DONE') return '❌'
+    if (status === 'IGNORE') return '➖'
+    return ''
+  }
+
   return {
     weekStart,
     weekEntries,
     weekNote,
     weekNoteSaved,
     weekDayNotes,
+    weekHabitLogs,
     weekDays,
     weekScore,
     weekLabel,
@@ -133,5 +156,6 @@ export function useWeekView({ todayStr }) {
     prevWeek,
     nextWeek,
     starsDisplay,
+    weekHabitStatusIcon,
   }
 }

@@ -23,6 +23,11 @@ public class HabitLogController {
         return repository.findByDate(date);
     }
 
+    @GetMapping("/week")
+    public List<HabitLog> findByWeek(@RequestParam String start, @RequestParam String end) {
+        return repository.findByDateBetween(start, end);
+    }
+
     @PostMapping
     public ResponseEntity<HabitLog> upsert(@RequestBody HabitLogRequest req) {
         HabitLog log = repository.findByDateAndHabitId(req.date(), req.habitId())
