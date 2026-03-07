@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registro de Humor</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+  <div id="app" class="app-wrapper">
+    <h1>Registro de Humor</h1>
+
+    <div class="tabs">
+      <button :class="['tab-btn', { active: activeTab === 'mood' }]" @click="switchTab('mood')">Registro de Humor</button>
+      <button :class="['tab-btn', { active: activeTab === 'week' }]" @click="switchTab('week')">Visão Semanal</button>
+    </div>
+
+    <!-- Mood Tracking Tab -->
+    <template v-if="activeTab === 'mood'">
+      <!-- Calendar -->
+      <div class="card">
+        <div class="calendar-header">
+          <button class="nav-btn" @click="prevMonth">&#8592;</button>
+          <span>{{ monthLabel }}</span>
+          <button class="nav-btn" @click="nextMonth">&#8594;</button>
+        </div>
+
+        <div class="calendar-grid">
+          <div class="day-label" v-for="d in dayLabels" :key="d">{{ d }}</div>
+          <div
+            v-for="(cell, i) in calendarDays"
+            :key="i"
+            :class="['day-cell', { empty: !cell, selected: cell === selectedDate, today: cell === todayStr }]"
+            @click="cell && selectDay(cell)"
+          >
+            <span v-if="cell">{{ cell.slice(-2).replace(/^0/, '') }}</span>
+            <span v-if="cell && monthEntries[cell]" class="dot"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slots -->
+      <div class="card">
+        <div class="selected-date-label">{{ formattedSelectedDate }}</div>
+
+        <div class="slot-row">
+          <div class="slot" v-for="slot in slots" :key="slot.key">
+            <div class="slot-title">{{ slot.icon }} {{ slot.label }}</div>
+            <div class="emoji-list">
+              <button
+                v-for="emoji in emojis"
+                :key="emoji.code"
+                :class="['emoji-btn', { active: dayEntries[slot.key] === emoji.code }]"
+                :title="emoji.name"
+                @click="saveEmoji(slot.key, emoji.code)"
+              >{{ emoji.char }}</button>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="error" class="error">{{ error }}</div>
+
+        <div class="day-note-section">
+          <div class="slot-title">Observação do dia</div>
+          <textarea class="week-note" style="min-height:60px" v-model="dayNote" placeholder="Como foi seu dia?"></textarea>
+          <div class="save-row">
+            <span v-if="dayNoteSaved" class="saved-msg">Salvo!</span>
+            <button class="save-btn" @click="saveDayNote">Salvar observação</button>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <!-- Week View Tab -->
+    <div class="card" v-if="activeTab === 'week'">
+      <div class="week-header">
+        <button class="nav-btn" @click="prevWeek">&#8592;</button>
+        <span>{{ weekLabel }}</span>
+        <button class="nav-btn" @click="nextWeek">&#8594;</button>
+      </div>
+
+      <table class="week-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th v-for="d in weekDays" :key="d" :class="{ 'today-col': d === todayStr }">
+              {{ dayLabels[new Date(d + 'T12:00:00').getDay()] }}<br/>{{ d.slice(8) }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="slot in slots" :key="slot.key">
+            <td :title="slot.label">{{ slot.icon }}</td>
+            <td v-for="d in weekDays" :key="d" :class="{ 'today-col': d === todayStr }"
+              :title="weekEntries[d] && weekEntries[d][slot.key] ? emojiName(weekEntries[d][slot.key]) : ''">
+              {{ weekEntries[d] && weekEntries[d][slot.key] ? emojiChar(weekEntries[d][slot.key]) : '' }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="week-summary">
+        <div class="week-score">
+          <strong>Nota da semana:</strong>
+          <span v-if="weekScore !== null">
+            <span class="stars">{{ starsDisplay(weekScore) }}</span>
+            <span class="score-value">{{ weekScore.toFixed(1) }} / 5</span>
+          </span>
+          <span v-else class="score-value"> sem registros</span>
+        </div>
+
+        <div class="week-note-label">Observações</div>
+        <textarea class="week-note" v-model="weekNote" placeholder="Escreva suas observações sobre a semana..."></textarea>
+        <div class="save-row">
+          <span v-if="weekNoteSaved" class="saved-msg">Salvo!</span>
+          <button class="generate-btn" @click="generatePrompt">Gerar Prompt para IA</button>
+          <button class="save-btn" @click="saveWeekSummary">Salvar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" v-if="showPromptModal" @click.self="showPromptModal = false">
+      <div class="modal-box">
+        <div class="modal-title">Prompt para IA</div>
+        <textarea class="prompt-textarea" readonly :value="generatedPrompt"></textarea>
+        <div class="modal-actions">
+          <button class="copy-btn" @click="copyPrompt">
+            {{ promptCopied ? 'Copiado!' : 'Copiar' }}
+          </button>
+          <button class="close-btn" @click="showPromptModal = false">Fechar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>
