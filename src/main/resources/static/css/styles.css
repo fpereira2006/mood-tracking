@@ -154,7 +154,23 @@ h1 {
   cursor: pointer;
   transition: border-color 0.15s, background 0.15s, transform 0.1s;
   line-height: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
 }
+
+.emoji-char { line-height: 1; }
+
+.emoji-label {
+  font-size: 9px;
+  color: #94a3b8;
+  line-height: 1;
+  white-space: nowrap;
+  font-family: inherit;
+}
+
+.emoji-btn.active .emoji-label { color: #6366f1; }
 
 .emoji-btn:hover { background: #eef2ff; transform: scale(1.1); }
 
@@ -418,6 +434,18 @@ h1 {
   font-size: 0.95rem;
   padding: 24px 0;
 }
+
+.habit-add-row { display: flex; gap: 8px; margin-bottom: 16px; }
+.habit-input { flex: 1; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; }
+.habit-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+.habit-item { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 14px; background: #f9fafb; border-radius: 8px; border: 1px solid #e5e7eb; }
+.habit-name { font-size: 15px; color: #1a1a2e; flex: 1; }
+.habit-actions { display: flex; gap: 6px; }
+.habit-edit-btn { padding: 4px 10px; background: #e0e7ff; color: #4f46e5; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; }
+.habit-edit-btn:hover { background: #c7d2fe; }
+.habit-delete-btn { padding: 4px 10px; background: #fee2e2; color: #dc2626; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; }
+.habit-delete-btn:hover { background: #fecaca; }
+.habit-empty { color: #9ca3af; font-size: 14px; text-align: center; padding: 16px 0; }
 
 .day-note-section {
   margin-top: 20px;

@@ -1,0 +1,3 @@
+package moodtracking.dto;
+
+public record HabitRequest(Long id, String name) {}

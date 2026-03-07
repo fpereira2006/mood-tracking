@@ -3,6 +3,7 @@ import { DAY_LABELS, EMOJIS, SLOTS, emojiChar, emojiName } from './constants.js'
 import { useMoodTab } from './composables/useMoodTab.js'
 import { useWeekView } from './composables/useWeekView.js'
 import { usePromptGenerator } from './composables/usePromptGenerator.js'
+import { useHabitsTab } from './composables/useHabitsTab.js'
 
 createApp({
   setup() {
@@ -16,10 +17,12 @@ createApp({
       weekScore: week.weekScore,
       weekDayNotes: week.weekDayNotes,
     })
+    const habitsTab = useHabitsTab()
 
     function switchTab(tab) {
       mood.activeTab.value = tab
       if (tab === 'week') week.loadWeek()
+      if (tab === 'habits') habitsTab.loadHabits()
     }
 
     onMounted(() => {
@@ -31,6 +34,7 @@ createApp({
       ...mood,
       ...week,
       ...prompt,
+      ...habitsTab,
       switchTab,
       dayLabels: DAY_LABELS,
       emojis: EMOJIS,

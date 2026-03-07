@@ -10,7 +10,13 @@ export const EMOJIS = [
   { code: '1F912', char: '\uD83E\uDD12', name: 'Doente',    score: 2 },
   { code: '1F525', char: '\uD83D\uDD25', name: 'Animado',   score: 5 },
   { code: '1F9D8', char: '\uD83E\uDDD8', name: 'Calmo',     score: 4 },
-  { code: '1F4AA', char: '\uD83D\uDCAA', name: 'Motivado',  score: 5 },
+  { code: '1F4AA', char: '\uD83D\uDCAA', name: 'Motivado',        score: 5 },
+  { code: '1F60E', char: '\uD83D\uDE0E', name: 'Confiante',       score: 5 },
+  { code: '1FAE5', char: '\uD83E\uDEE5', name: 'Distante',        score: 2 },
+  { code: '1F636', char: '\uD83D\uDE36', name: 'Sem sentimentos',  score: 3 },
+  { code: '26A1',  char: '\u26A1',       name: 'Com energia',      score: 5 },
+  { code: '1FAAB', char: '\uD83E\uDEAB', name: 'Sem energia',      score: 2 },
+  { code: '1F914', char: '\uD83E\uDD14', name: 'Pensativo',        score: 3 },
 ]
 
 export const EMOJI_SCORE = Object.fromEntries(EMOJIS.map(e => [e.code, e.score]))

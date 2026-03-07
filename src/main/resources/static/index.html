@@ -21,7 +21,31 @@
 
     <!-- Habits Tab -->
     <div class="card" v-if="activeTab === 'habits'">
-      <p class="coming-soon">Em breve</p>
+      <div class="habit-add-row">
+        <input class="habit-input" v-model="newHabitName" placeholder="Nome do hábito" @keyup="onNewHabitKeyup" />
+        <button class="save-btn" @click="addHabit">Adicionar</button>
+      </div>
+      <div v-if="error" class="error">{{ error }}</div>
+
+      <ul class="habit-list">
+        <li v-for="habit in (habits || [])" :key="habit.id" class="habit-item">
+          <template v-if="editingId !== habit.id">
+            <span class="habit-name">{{ habit.name }}</span>
+            <div class="habit-actions">
+              <button class="habit-edit-btn" @click="startEdit(habit)">Editar</button>
+              <button class="habit-delete-btn" @click="deleteHabit(habit.id)">Excluir</button>
+            </div>
+          </template>
+          <template v-else>
+            <input class="habit-input" v-model="editingName" @keyup="onEditKeyup" />
+            <div class="habit-actions">
+              <button class="save-btn" @click="saveEdit">Salvar</button>
+              <button class="habit-delete-btn" @click="cancelEdit">Cancelar</button>
+            </div>
+          </template>
+        </li>
+        <li v-if="!habits || habits.length === 0" class="habit-empty">Nenhum hábito cadastrado.</li>
+      </ul>
     </div>
 
     <!-- Sleep Tab -->
@@ -59,8 +83,11 @@
             <div class="slot-title">{{ slot.icon }} {{ slot.label }}</div>
             <div class="emoji-list">
               <button v-for="emoji in emojis" :key="emoji.code"
-                :class="['emoji-btn', { active: (dayEntries[slot.key] || []).includes(emoji.code) }]" :title="emoji.name"
-                @click="saveEmoji(slot.key, emoji.code)">{{ emoji.char }}</button>
+                :class="['emoji-btn', { active: (dayEntries[slot.key] || []).includes(emoji.code) }]"
+                @click="saveEmoji(slot.key, emoji.code)">
+                <span class="emoji-char">{{ emoji.char }}</span>
+                <span class="emoji-label">{{ emoji.name }}</span>
+              </button>
             </div>
           </div>
         </div>
