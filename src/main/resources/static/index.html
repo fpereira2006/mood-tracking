@@ -218,6 +218,7 @@
             <tbody>
               <tr v-for="habit in (habits || [])" :key="habit.id">
                 <td class="week-habit-name-cell" :title="habit.name">
+                  <span class="priority-badge" :style="{ backgroundColor: priorityColor(habit.priority ?? 5) }">{{ habit.priority ?? 5 }}</span>
                   {{ habit.icon || '🔲' }} {{ habit.name }}
                 </td>
                 <td v-for="d in weekDays" :key="d" :class="{ 'today-col': d === todayStr }" class="week-habit-status-cell">
