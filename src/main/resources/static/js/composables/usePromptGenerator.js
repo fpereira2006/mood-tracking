@@ -28,7 +28,10 @@ export function usePromptGenerator({ todayStr, weekDays, weekEntries, weekNote, 
       const [dy, dm, dd] = date.split('-')
       const dayOfWeek = new Date(date + 'T12:00:00').getDay()
       const dayName = `${DAY_LABELS[dayOfWeek]} ${dd}/${dm}`
-      const cells = SLOTS.map(s => dayMap[s.key] ? emojiName(dayMap[s.key]) : '\u2013')
+      const cells = SLOTS.map(s => {
+        const codes = dayMap[s.key] || []
+        return codes.length > 0 ? codes.map(c => emojiName(c)).join(', ') : '\u2013'
+      })
       tableRows.push(`| ${dayName.padEnd(9)} | ${cells.join(' | ')} |`)
     }
 

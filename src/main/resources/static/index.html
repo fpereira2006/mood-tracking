@@ -59,7 +59,7 @@
             <div class="slot-title">{{ slot.icon }} {{ slot.label }}</div>
             <div class="emoji-list">
               <button v-for="emoji in emojis" :key="emoji.code"
-                :class="['emoji-btn', { active: dayEntries[slot.key] === emoji.code }]" :title="emoji.name"
+                :class="['emoji-btn', { active: (dayEntries[slot.key] || []).includes(emoji.code) }]" :title="emoji.name"
                 @click="saveEmoji(slot.key, emoji.code)">{{ emoji.char }}</button>
             </div>
           </div>
@@ -100,8 +100,8 @@
           <tr v-for="slot in slots" :key="slot.key">
             <td :title="slot.label">{{ slot.icon }}</td>
             <td v-for="d in weekDays" :key="d" :class="{ 'today-col': d === todayStr }"
-              :title="weekEntries[d] && weekEntries[d][slot.key] ? emojiName(weekEntries[d][slot.key]) : ''">
-              {{ weekEntries[d] && weekEntries[d][slot.key] ? emojiChar(weekEntries[d][slot.key]) : '' }}
+              :title="(weekEntries[d]?.[slot.key] || []).map(c => emojiName(c)).join(', ')">
+              {{ (weekEntries[d]?.[slot.key] || []).map(c => emojiChar(c)).join('') }}
             </td>
           </tr>
         </tbody>

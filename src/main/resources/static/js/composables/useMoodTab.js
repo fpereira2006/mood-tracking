@@ -52,7 +52,7 @@ export function useMoodTab() {
       const res = await fetch(`/mood?date=${date}`)
       const entries = await res.json()
       const map = {}
-      entries.forEach(e => { map[e.slot] = e.emojiCode })
+      entries.forEach(e => { map[e.slot] = e.emojiCode ? e.emojiCode.split(',') : [] })
       dayEntries.value = map
     } catch (e) {
       error.value = 'Erro ao carregar dia.'
@@ -108,15 +108,18 @@ export function useMoodTab() {
 
   async function saveEmoji(slot, emojiCode) {
     error.value = ''
-    const isSelected = dayEntries.value[slot] === emojiCode
+    const current = dayEntries.value[slot] || []
+    const isSelected = current.includes(emojiCode)
+    const updated = isSelected ? current.filter(c => c !== emojiCode) : [...current, emojiCode]
     try {
-      if (isSelected) {
+      if (updated.length === 0) {
         const res = await fetch(`/mood?date=${selectedDate.value}&slot=${slot}`, { method: 'DELETE' })
         if (!res.ok) throw new Error()
-        const updated = { ...dayEntries.value }
-        delete updated[slot]
-        dayEntries.value = updated
-        if (!Object.keys(dayEntries.value).length) {
+        const newEntries = { ...dayEntries.value }
+        delete newEntries[slot]
+        dayEntries.value = newEntries
+        const hasAny = Object.values(dayEntries.value).some(arr => arr.length > 0)
+        if (!hasAny) {
           const map = { ...monthEntries.value }
           delete map[selectedDate.value]
           monthEntries.value = map
@@ -125,10 +128,10 @@ export function useMoodTab() {
         const res = await fetch('/mood', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ date: selectedDate.value, slot, emojiCode })
+          body: JSON.stringify({ date: selectedDate.value, slot, emojiCode: updated.join(',') })
         })
         if (!res.ok) throw new Error()
-        dayEntries.value = { ...dayEntries.value, [slot]: emojiCode }
+        dayEntries.value = { ...dayEntries.value, [slot]: updated }
         monthEntries.value = { ...monthEntries.value, [selectedDate.value]: true }
       }
     } catch (e) {

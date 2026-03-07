@@ -24,10 +24,12 @@ export function useWeekView({ todayStr }) {
   const weekScore = computed(() => {
     let total = 0, count = 0
     for (const dayMap of Object.values(weekEntries.value)) {
-      for (const code of Object.values(dayMap)) {
-        if (EMOJI_SCORE[code] !== undefined) {
-          total += EMOJI_SCORE[code]
-          count++
+      for (const codes of Object.values(dayMap)) {
+        for (const code of codes) {
+          if (EMOJI_SCORE[code] !== undefined) {
+            total += EMOJI_SCORE[code]
+            count++
+          }
         }
       }
     }
@@ -89,7 +91,7 @@ export function useWeekView({ todayStr }) {
       const map = {}
       entries.forEach(e => {
         if (!map[e.date]) map[e.date] = {}
-        map[e.date][e.slot] = e.emojiCode
+        map[e.date][e.slot] = e.emojiCode ? e.emojiCode.split(',') : []
       })
       weekEntries.value = map
 
