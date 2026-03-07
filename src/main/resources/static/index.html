@@ -152,6 +152,38 @@
           </div>
         </div>
 
+        <!-- Sleep Log -->
+        <div class="sleep-log-section" v-if="selectedDate">
+          <div class="slot-title">Sono</div>
+          <div class="sleep-log-row">
+            <div class="sleep-log-field">
+              <label class="sleep-log-label">Dormi às <span class="sleep-log-hint">(noite anterior)</span></label>
+              <input type="time" class="sleep-time-input" v-model="sleepBedtime" />
+            </div>
+            <div class="sleep-log-field">
+              <label class="sleep-log-label">Acordei às</label>
+              <input type="time" class="sleep-time-input" v-model="sleepWakeTime" />
+            </div>
+            <div class="sleep-log-field" v-if="sleepDuration">
+              <label class="sleep-log-label">Duração</label>
+              <span class="sleep-duration">{{ sleepDuration }}</span>
+            </div>
+            <div class="sleep-log-field">
+              <label class="sleep-log-label">Qualidade</label>
+              <div class="sleep-quality-btns">
+                <button v-for="q in ['ruim', 'médio', 'bom', 'ótimo']" :key="q"
+                  :class="['sleep-quality-btn', { active: sleepQuality === q }]"
+                  @click="sleepQuality = q">{{ q }}</button>
+              </div>
+            </div>
+          </div>
+          <div class="save-row">
+            <span v-if="sleepSaved" class="saved-msg">Salvo!</span>
+            <button class="sleep-clear-btn" @click="clearSleepLog" v-if="sleepExists">Limpar</button>
+            <button class="save-btn" @click="saveSleepLog">Salvar sono</button>
+          </div>
+        </div>
+
         <div class="day-note-section">
           <div class="slot-title">Observação do dia</div>
           <textarea class="week-note" style="min-height:60px" v-model="dayNote"

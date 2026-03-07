@@ -15,6 +15,22 @@ export function useMoodTab() {
   const dayNoteSaved = ref(false)
   const activeTab    = ref('mood')
   const habitLogs    = ref({})
+  const sleepBedtime = ref('23:00')
+  const sleepWakeTime = ref('07:00')
+  const sleepQuality = ref('bom')
+  const sleepSaved   = ref(false)
+  const sleepExists  = ref(false)
+
+  const sleepDuration = computed(() => {
+    if (!sleepBedtime.value || !sleepWakeTime.value) return null
+    const [bh, bm] = sleepBedtime.value.split(':').map(Number)
+    const [wh, wm] = sleepWakeTime.value.split(':').map(Number)
+    let minutes = (wh * 60 + wm) - (bh * 60 + bm)
+    if (minutes <= 0) minutes += 24 * 60
+    const h = Math.floor(minutes / 60)
+    const m = minutes % 60
+    return m > 0 ? `${h}h ${m}min` : `${h}h`
+  })
 
   const monthLabel = computed(() =>
     `${MONTH_NAMES[currentMonth.value - 1]} ${currentYear.value}`
@@ -66,6 +82,26 @@ export function useMoodTab() {
     }
     dayNoteSaved.value = false
     await loadHabitLogs(date)
+    try {
+      const res = await fetch(`/sleep-log?date=${date}`)
+      if (res.status === 204) {
+        sleepBedtime.value = '23:00'
+        sleepWakeTime.value = '07:00'
+        sleepQuality.value = 'bom'
+        sleepExists.value = false
+      } else {
+        const data = await res.json()
+        sleepBedtime.value = data.bedtime || '23:00'
+        sleepWakeTime.value = data.wakeTime || '07:00'
+        sleepQuality.value = data.quality || 'bom'
+        sleepExists.value = true
+      }
+    } catch (e) {
+      sleepBedtime.value = '23:00'
+      sleepWakeTime.value = '07:00'
+      sleepQuality.value = 'bom'
+      sleepExists.value = false
+    }
   }
 
   async function loadHabitLogs(date) {
@@ -109,6 +145,33 @@ export function useMoodTab() {
       if (res.ok) {
         habitLogs.value = { ...habitLogs.value, [habitId]: next }
       }
+    }
+  }
+
+  async function saveSleepLog() {
+    try {
+      await fetch('/sleep-log', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ date: selectedDate.value, bedtime: sleepBedtime.value, wakeTime: sleepWakeTime.value, quality: sleepQuality.value })
+      })
+      sleepSaved.value = true
+      sleepExists.value = true
+      setTimeout(() => { sleepSaved.value = false }, 2000)
+    } catch (e) {
+      // silently ignore
+    }
+  }
+
+  async function clearSleepLog() {
+    try {
+      await fetch(`/sleep-log?date=${selectedDate.value}`, { method: 'DELETE' })
+      sleepBedtime.value = '23:00'
+      sleepWakeTime.value = '07:00'
+      sleepQuality.value = 'bom'
+      sleepExists.value = false
+    } catch (e) {
+      // silently ignore
     }
   }
 
@@ -200,9 +263,17 @@ export function useMoodTab() {
     monthLabel,
     formattedSelectedDate,
     calendarDays,
+    sleepBedtime,
+    sleepWakeTime,
+    sleepQuality,
+    sleepSaved,
+    sleepExists,
+    sleepDuration,
+    clearSleepLog,
     loadMonth,
     loadDay,
     saveDayNote,
+    saveSleepLog,
     prevMonth,
     nextMonth,
     selectDay,

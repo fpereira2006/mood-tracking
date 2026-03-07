@@ -787,6 +787,21 @@ h1 {
   background: #f1f5f9;
 }
 
+.sleep-log-section { margin-top: 20px; padding-top: 16px; border-top: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 10px; }
+.sleep-log-row { display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-end; }
+.sleep-log-field { display: flex; flex-direction: column; gap: 4px; }
+.sleep-log-label { font-size: 0.78rem; color: #64748b; font-weight: 600; }
+.sleep-time-input { padding: 6px 10px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 0.9rem; font-family: inherit; outline: none; }
+.sleep-time-input:focus { border-color: #4f46e5; }
+.sleep-quality-btns { display: flex; gap: 4px; }
+.sleep-quality-btn { padding: 5px 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.8rem; background: #f8fafc; cursor: pointer; transition: all 0.15s; }
+.sleep-quality-btn.active { background: #4f46e5; color: #fff; border-color: #4f46e5; }
+.sleep-quality-btn:hover:not(.active) { border-color: #4f46e5; color: #4f46e5; }
+.sleep-duration { font-size: 1rem; font-weight: 700; color: #4f46e5; padding-top: 2px; }
+.sleep-log-hint { font-weight: 400; color: #94a3b8; font-size: 0.72rem; }
+.sleep-clear-btn { background: none; color: #94a3b8; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 14px; font-size: 0.85rem; cursor: pointer; transition: all 0.15s; }
+.sleep-clear-btn:hover { border-color: #dc2626; color: #dc2626; }
+
 .week-habit-section {
   margin-top: 12px;
 }
