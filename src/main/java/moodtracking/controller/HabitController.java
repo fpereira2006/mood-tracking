@@ -46,6 +46,9 @@ public class HabitController {
         if (habit.getCreatedAt() == null) {
             habit.setCreatedAt(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
         }
+        if (request.icon() != null) {
+            habit.setIcon(request.icon());
+        }
         if (habit.getPosition() == null) {
             int max = repository.findAll().stream()
                     .mapToInt(h -> h.getPosition() == null ? 0 : h.getPosition())

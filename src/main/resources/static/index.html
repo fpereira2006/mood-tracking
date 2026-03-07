@@ -23,6 +23,14 @@
     <div class="card" v-if="activeTab === 'habits'">
       <div class="habit-add-row">
         <input class="habit-input" v-model="newHabitName" placeholder="Nome do hábito" @keyup="onNewHabitKeyup" />
+        <div class="icon-picker-wrap">
+          <button class="icon-pick-btn" type="button" @click="showAddIconPicker = !showAddIconPicker">
+            {{ newHabitIcon || '🔲' }}
+          </button>
+          <div class="icon-grid" v-if="showAddIconPicker">
+            <button v-for="ic in ICONS" :key="ic" class="icon-opt" @click="newHabitIcon = ic; showAddIconPicker = false">{{ ic }}</button>
+          </div>
+        </div>
         <input class="priority-input" type="number" v-model.number="newHabitPriority" min="1" max="10" title="Prioridade (1-10)" />
         <button class="save-btn" @click="addHabit">Adicionar</button>
       </div>
@@ -42,6 +50,7 @@
             <span class="priority-badge" :style="{ backgroundColor: priorityColor(habit.priority ?? 5) }">
               {{ habit.priority ?? 5 }}
             </span>
+            <span class="habit-icon">{{ habit.icon || '🔲' }}</span>
             <span class="habit-name">{{ habit.name }}</span>
             <div class="habit-actions">
               <button class="habit-edit-btn" @click="startEdit(habit)">Editar</button>
@@ -50,6 +59,14 @@
           </template>
           <template v-else>
             <input class="habit-input" v-model="editingName" @keyup="onEditKeyup" />
+            <div class="icon-picker-wrap">
+              <button class="icon-pick-btn" type="button" @click="showEditIconPicker = !showEditIconPicker">
+                {{ editingIcon || '🔲' }}
+              </button>
+              <div class="icon-grid" v-if="showEditIconPicker">
+                <button v-for="ic in ICONS" :key="ic" class="icon-opt" @click="editingIcon = ic; showEditIconPicker = false">{{ ic }}</button>
+              </div>
+            </div>
             <input class="priority-input" type="number" v-model.number="editingPriority" min="1" max="10" />
             <div class="habit-actions">
               <button class="save-btn" @click="saveEdit">Salvar</button>

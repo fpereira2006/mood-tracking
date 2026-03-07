@@ -22,6 +22,9 @@ public class Habit {
     @Column(name = "priority")
     private Integer priority;
 
+    @Column(name = "icon")
+    private String icon;
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -36,4 +39,7 @@ public class Habit {
 
     public Integer getPriority() { return priority; }
     public void setPriority(Integer priority) { this.priority = priority; }
+
+    public String getIcon() { return icon; }
+    public void setIcon(String icon) { this.icon = icon; }
 }

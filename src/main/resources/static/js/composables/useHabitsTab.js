@@ -4,9 +4,15 @@ export function useHabitsTab() {
   const habits = ref([])
   const newHabitName = ref('')
   const newHabitPriority = ref(5)
+  const newHabitIcon = ref('')
   const editingId = ref(null)
   const editingName = ref('')
   const editingPriority = ref(5)
+  const editingIcon = ref('')
+  const showAddIconPicker = ref(false)
+  const showEditIconPicker = ref(false)
+
+  const ICONS = ['❤️','💧','🥗','🏃','💪','📖','😴','🧘','🚶','🎯','💻','💰','📊','🌙','🧠','🎵','🏋️','🥤','📚','☕','🚫','📵','🗣️','📋','✍️','🍎','🇬🇧','🎨','🛁','🥤']
   const error = ref('')
   const dragSrcIndex = ref(null)
 
@@ -28,11 +34,12 @@ export function useHabitsTab() {
     const res = await fetch('/habits', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, priority: newHabitPriority.value }),
+      body: JSON.stringify({ name, priority: newHabitPriority.value, icon: newHabitIcon.value }),
     })
     if (res.ok) {
       newHabitName.value = ''
       newHabitPriority.value = 5
+      newHabitIcon.value = ''
       await loadHabits()
     } else {
       error.value = 'Erro ao adicionar hábito.'
@@ -43,6 +50,7 @@ export function useHabitsTab() {
     editingId.value = habit.id
     editingName.value = habit.name
     editingPriority.value = habit.priority ?? 5
+    editingIcon.value = habit.icon ?? ''
   }
 
   async function saveEdit() {
@@ -51,7 +59,7 @@ export function useHabitsTab() {
     const res = await fetch('/habits', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: editingId.value, name, priority: editingPriority.value }),
+      body: JSON.stringify({ id: editingId.value, name, priority: editingPriority.value, icon: editingIcon.value }),
     })
     if (res.ok) {
       editingId.value = null
@@ -118,5 +126,5 @@ export function useHabitsTab() {
     return `hsl(${hue}, 80%, 45%)`
   }
 
-  return { habits, newHabitName, newHabitPriority, editingId, editingName, editingPriority, error, dragSrcIndex, loadHabits, addHabit, startEdit, saveEdit, cancelEdit, onNewHabitKeyup, onEditKeyup, deleteHabit, onDragStart, onDragOver, onDrop, onDragEnd, priorityColor }
+  return { habits, newHabitName, newHabitPriority, newHabitIcon, editingId, editingName, editingPriority, editingIcon, showAddIconPicker, showEditIconPicker, ICONS, error, dragSrcIndex, loadHabits, addHabit, startEdit, saveEdit, cancelEdit, onNewHabitKeyup, onEditKeyup, deleteHabit, onDragStart, onDragOver, onDrop, onDragEnd, priorityColor }
 }
