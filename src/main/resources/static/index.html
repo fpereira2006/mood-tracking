@@ -122,6 +122,36 @@
 
         <div v-if="error" class="error">{{ error }}</div>
 
+        <!-- Habit Log -->
+        <div class="habit-log-section" v-if="selectedDate">
+          <h3 class="habit-log-title">Habitos</h3>
+
+          <ul class="habit-log-list">
+            <li v-for="habit in (habits || []).filter(h => (habitLogs[h.id] ?? null) !== 'DONE')"
+                :key="habit.id" class="habit-log-item"
+                @click="cycleHabitLog(habit.id)">
+              <span class="habit-log-status">{{ statusIcon(habitLogs[habit.id]) }}</span>
+              <span class="priority-badge" :style="{ backgroundColor: priorityColor(habit.priority ?? 5) }">{{ habit.priority ?? 5 }}</span>
+              <span class="habit-log-icon">{{ habit.icon || '🔲' }}</span>
+              <span class="habit-log-name">{{ habit.name }}</span>
+            </li>
+          </ul>
+
+          <div v-if="(habits || []).some(h => habitLogs[h.id] === 'DONE')" class="habit-log-done-section">
+            <h4 class="habit-log-done-title">Ja realizados</h4>
+            <ul class="habit-log-list">
+              <li v-for="habit in (habits || []).filter(h => habitLogs[h.id] === 'DONE')"
+                  :key="habit.id" class="habit-log-item habit-log-item--done"
+                  @click="cycleHabitLog(habit.id)">
+                <span class="habit-log-status">✅</span>
+                <span class="priority-badge" :style="{ backgroundColor: priorityColor(habit.priority ?? 5) }">{{ habit.priority ?? 5 }}</span>
+                <span class="habit-log-icon">{{ habit.icon || '🔲' }}</span>
+                <span class="habit-log-name">{{ habit.name }}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
         <div class="day-note-section">
           <div class="slot-title">Observação do dia</div>
           <textarea class="week-note" style="min-height:60px" v-model="dayNote"

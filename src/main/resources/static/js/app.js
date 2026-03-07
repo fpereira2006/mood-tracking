@@ -28,6 +28,7 @@ createApp({
     onMounted(() => {
       mood.loadMonth()
       mood.loadDay(mood.todayStr)
+      habitsTab.loadHabits()
     })
 
     return {

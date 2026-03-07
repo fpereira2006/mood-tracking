@@ -14,6 +14,7 @@ export function useMoodTab() {
   const dayNote      = ref('')
   const dayNoteSaved = ref(false)
   const activeTab    = ref('mood')
+  const habitLogs    = ref({})
 
   const monthLabel = computed(() =>
     `${MONTH_NAMES[currentMonth.value - 1]} ${currentYear.value}`
@@ -64,6 +65,51 @@ export function useMoodTab() {
       dayNote.value = ''
     }
     dayNoteSaved.value = false
+    await loadHabitLogs(date)
+  }
+
+  async function loadHabitLogs(date) {
+    try {
+      const res = await fetch(`/habit-logs?date=${date}`)
+      if (!res.ok) return
+      const data = await res.json()
+      const map = {}
+      data.forEach(l => { map[l.habitId] = l.status })
+      habitLogs.value = map
+    } catch (e) {
+      // silently ignore
+    }
+  }
+
+  const STATUS_CYCLE = [null, 'DONE', 'NOT_DONE', 'IGNORE']
+
+  function statusIcon(status) {
+    if (status === 'DONE') return '✅'
+    if (status === 'NOT_DONE') return '❌'
+    if (status === 'IGNORE') return '➖'
+    return '⬜'
+  }
+
+  async function cycleHabitLog(habitId) {
+    const current = habitLogs.value[habitId] ?? null
+    const idx = STATUS_CYCLE.indexOf(current)
+    const next = STATUS_CYCLE[(idx + 1) % STATUS_CYCLE.length]
+
+    if (next === null) {
+      await fetch(`/habit-logs?date=${selectedDate.value}&habitId=${habitId}`, { method: 'DELETE' })
+      const map = { ...habitLogs.value }
+      delete map[habitId]
+      habitLogs.value = map
+    } else {
+      const res = await fetch('/habit-logs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ date: selectedDate.value, habitId, status: next })
+      })
+      if (res.ok) {
+        habitLogs.value = { ...habitLogs.value, [habitId]: next }
+      }
+    }
   }
 
   async function saveDayNote() {
@@ -150,6 +196,7 @@ export function useMoodTab() {
     dayNote,
     dayNoteSaved,
     activeTab,
+    habitLogs,
     monthLabel,
     formattedSelectedDate,
     calendarDays,
@@ -160,5 +207,7 @@ export function useMoodTab() {
     nextMonth,
     selectDay,
     saveEmoji,
+    cycleHabitLog,
+    statusIcon,
   }
 }
