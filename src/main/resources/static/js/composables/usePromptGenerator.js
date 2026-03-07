@@ -4,7 +4,7 @@ import { DAY_LABELS, SLOTS, emojiName } from '../constants.js'
 export function usePromptGenerator({ todayStr, weekDays, weekEntries, weekNote, weekScore, weekDayNotes }) {
   const showPromptModal = ref(false)
   const generatedPrompt = ref('')
-  const promptCopied    = ref(false)
+  const promptCopied = ref(false)
 
   function generatePrompt() {
     const days = weekDays.value
@@ -46,7 +46,7 @@ export function usePromptGenerator({ todayStr, weekDays, weekEntries, weekNote, 
     const tableHeader = `| Dia       | ${slotLabels.join(' | ')} |\n${separator}`
     const tableBody = tableRows.length > 0 ? tableRows.join('\n') : '| (sem registros) | \u2013 | \u2013 | \u2013 | \u2013 |'
 
-    const instruction = '\nResponda na sequência exata das perguntas acima, uma por uma, sem criar seções extras ou tópicos adicionais.'
+    const instruction = '\nResponda na sequência exata das perguntas acima, uma por uma, sem criar seções extras ou tópicos adicionais. Ao responder cada pergunta, repita o enunciado da pergunta antes da resposta. Use bullets nas respostas.'
     const questionsPart = inProgress
       ? `## O que quero saber:\n1. Com base nos dias registrados, quais padrões já são visíveis?\n2. Existem horários ou situações que merecem atenção especial?\n3. O que eu deveria observar ou medir nos dias restantes da semana?\n4. Que ajustes concretos posso fazer ainda esta semana?${instruction}`
       : `## O que quero saber:\n1. Quais padrões você identifica nos meus humores ao longo dos dias e horários?\n2. Existem horários críticos que merecem atenção? (ex: sempre ansioso de manhã)\n3. O que eu deveria medir ou observar na próxima semana para entender melhor minha rotina?\n4. Que mudanças concretas você sugere experimentar?${instruction}`

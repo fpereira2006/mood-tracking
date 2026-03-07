@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Registro de Humor</title>
+  <title>Rotina</title>
   <link rel="stylesheet" href="/css/styles.css">
 </head>
 
 <body>
   <div id="app" class="app-wrapper">
-    <h1>Registro de Humor</h1>
+    <h1>Rotina</h1>
 
     <div class="tabs">
-      <button :class="['tab-btn', { active: activeTab === 'mood' }]" @click="switchTab('mood')">Registro de Humor</button>
+      <button :class="['tab-btn', { active: activeTab === 'mood' }]" @click="switchTab('mood')">Registro de
+        Humor</button>
       <button :class="['tab-btn', { active: activeTab === 'week' }]" @click="switchTab('week')">Visão Semanal</button>
     </div>
 
@@ -28,12 +30,9 @@
 
         <div class="calendar-grid">
           <div class="day-label" v-for="d in dayLabels" :key="d">{{ d }}</div>
-          <div
-            v-for="(cell, i) in calendarDays"
-            :key="i"
+          <div v-for="(cell, i) in calendarDays" :key="i"
             :class="['day-cell', { empty: !cell, selected: cell === selectedDate, today: cell === todayStr }]"
-            @click="cell && selectDay(cell)"
-          >
+            @click="cell && selectDay(cell)">
             <span v-if="cell">{{ cell.slice(-2).replace(/^0/, '') }}</span>
             <span v-if="cell && monthEntries[cell]" class="dot"></span>
           </div>
@@ -48,13 +47,9 @@
           <div class="slot" v-for="slot in slots" :key="slot.key">
             <div class="slot-title">{{ slot.icon }} {{ slot.label }}</div>
             <div class="emoji-list">
-              <button
-                v-for="emoji in emojis"
-                :key="emoji.code"
-                :class="['emoji-btn', { active: dayEntries[slot.key] === emoji.code }]"
-                :title="emoji.name"
-                @click="saveEmoji(slot.key, emoji.code)"
-              >{{ emoji.char }}</button>
+              <button v-for="emoji in emojis" :key="emoji.code"
+                :class="['emoji-btn', { active: dayEntries[slot.key] === emoji.code }]" :title="emoji.name"
+                @click="saveEmoji(slot.key, emoji.code)">{{ emoji.char }}</button>
             </div>
           </div>
         </div>
@@ -63,7 +58,8 @@
 
         <div class="day-note-section">
           <div class="slot-title">Observação do dia</div>
-          <textarea class="week-note" style="min-height:60px" v-model="dayNote" placeholder="Como foi seu dia?"></textarea>
+          <textarea class="week-note" style="min-height:60px" v-model="dayNote"
+            placeholder="Como foi seu dia?"></textarea>
           <div class="save-row">
             <span v-if="dayNoteSaved" class="saved-msg">Salvo!</span>
             <button class="save-btn" @click="saveDayNote">Salvar observação</button>
@@ -85,7 +81,7 @@
           <tr>
             <th></th>
             <th v-for="d in weekDays" :key="d" :class="{ 'today-col': d === todayStr }">
-              {{ dayLabels[new Date(d + 'T12:00:00').getDay()] }}<br/>{{ d.slice(8) }}
+              {{ dayLabels[new Date(d + 'T12:00:00').getDay()] }}<br />{{ d.slice(8) }}
             </th>
           </tr>
         </thead>
@@ -111,7 +107,8 @@
         </div>
 
         <div class="week-note-label">Observações</div>
-        <textarea class="week-note" v-model="weekNote" placeholder="Escreva suas observações sobre a semana..."></textarea>
+        <textarea class="week-note" v-model="weekNote"
+          placeholder="Escreva suas observações sobre a semana..."></textarea>
         <div class="save-row">
           <span v-if="weekNoteSaved" class="saved-msg">Salvo!</span>
           <button class="generate-btn" @click="generatePrompt">Gerar Prompt para IA</button>
@@ -136,4 +133,5 @@
 
   <script type="module" src="/js/app.js"></script>
 </body>
+
 </html>
