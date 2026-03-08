@@ -1,7 +1,17 @@
 import { ref } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
 import { DAY_LABELS, SLOTS, emojiName } from '../constants.js'
 
-export function usePromptGenerator({ todayStr, weekDays, weekEntries, weekNote, weekScore, weekDayNotes, weekHabitLogs, habits }) {
+export function usePromptGenerator({ todayStr, weekDays, weekEntries, weekNote, weekScore, weekDayNotes, weekHabitLogs, weekSleepLogs, habits }) {
+  function sleepDuration(bedtime, wakeTime) {
+    const [bh, bm] = bedtime.split(':').map(Number)
+    const [wh, wm] = wakeTime.split(':').map(Number)
+    let minutes = (wh * 60 + wm) - (bh * 60 + bm)
+    if (minutes <= 0) minutes += 24 * 60
+    const h = Math.floor(minutes / 60)
+    const m = minutes % 60
+    return m > 0 ? `${h}h ${m}min` : `${h}h`
+  }
+
   const showPromptModal = ref(false)
   const generatedPrompt = ref('')
   const promptCopied = ref(false)
@@ -67,6 +77,22 @@ export function usePromptGenerator({ todayStr, weekDays, weekEntries, weekNote, 
       ? `## Observações por dia:\n${dayNoteLines.join('\n')}`
       : ''
 
+    const sleepMap = weekSleepLogs.value || {}
+    const sleepRows = []
+    for (const date of days) {
+      if (inProgress && date > todayStr) continue
+      const s = sleepMap[date]
+      if (!s || !s.bedtime || !s.wakeTime) continue
+      const [dy, dm, dd] = date.split('-')
+      const dayOfWeek = new Date(date + 'T12:00:00').getDay()
+      const dayName = `${DAY_LABELS[dayOfWeek]} ${dd}/${dm}`
+      const duration = sleepDuration(s.bedtime, s.wakeTime)
+      sleepRows.push(`| ${dayName.padEnd(9)} | ${s.bedtime}  | ${s.wakeTime}   | ${duration.padEnd(7)} | ${s.quality || '–'} |`)
+    }
+    const sleepPart = sleepRows.length > 0
+      ? `## Sono da semana:\n| Dia       | Dormiu | Acordou | Duração  | Qualidade |\n|-----------|--------|---------|----------|-----------|\n${sleepRows.join('\n')}`
+      : ''
+
     const hlMap = weekHabitLogs.value || {}
     const visibleHabits = (habits.value || []).filter(h =>
       h.active !== false || hlMap[h.id]
@@ -108,6 +134,7 @@ export function usePromptGenerator({ todayStr, weekDays, weekEntries, weekNote, 
       '',
       `${noteLabel}: ${noteText}`,
       ...(dayNotesPart ? ['', dayNotesPart] : []),
+      ...(sleepPart ? ['', sleepPart] : []),
       ...(habitsPart ? ['', habitsPart] : []),
       '',
       questionsPart,

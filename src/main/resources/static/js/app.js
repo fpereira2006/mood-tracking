@@ -20,6 +20,7 @@ createApp({
       weekScore: week.weekScore,
       weekDayNotes: week.weekDayNotes,
       weekHabitLogs: week.weekHabitLogs,
+      weekSleepLogs: week.weekSleepLogs,
       habits: habitsTab.habits,
     })
     const exportTab = useExportTab()

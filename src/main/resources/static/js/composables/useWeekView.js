@@ -13,6 +13,7 @@ export function useWeekView({ todayStr }) {
   const weekNoteSaved = ref(false)
   const weekDayNotes  = ref({})
   const weekHabitLogs = ref({})
+  const weekSleepLogs = ref({})
 
   const weekDays = computed(() => {
     return Array.from({ length: 7 }, (_, i) => {
@@ -117,6 +118,17 @@ export function useWeekView({ todayStr }) {
     } catch (e) {
       // silently ignore
     }
+
+    try {
+      const days = weekDays.value
+      const sleepRes = await fetch(`/sleep-log/range?start=${days[0]}&end=${days[6]}`)
+      const sleepData = await sleepRes.json()
+      const sleepMap = {}
+      sleepData.forEach(s => { sleepMap[s.date] = { bedtime: s.bedtime, wakeTime: s.wakeTime, quality: s.quality } })
+      weekSleepLogs.value = sleepMap
+    } catch (e) {
+      // silently ignore
+    }
   }
 
   function prevWeek() {
@@ -147,6 +159,7 @@ export function useWeekView({ todayStr }) {
     weekNoteSaved,
     weekDayNotes,
     weekHabitLogs,
+    weekSleepLogs,
     weekDays,
     weekScore,
     weekLabel,
