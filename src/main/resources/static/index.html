@@ -16,7 +16,7 @@
       <button :class="['tab-btn', { active: activeTab === 'mood' }]" @click="switchTab('mood')">Dia</button>
       <button :class="['tab-btn', { active: activeTab === 'week' }]" @click="switchTab('week')">Semana</button>
       <button :class="['tab-btn', { active: activeTab === 'habits' }]" @click="switchTab('habits')">Hábitos</button>
-      <button :class="['tab-btn', { active: activeTab === 'sleep' }]" @click="switchTab('sleep')">Sono</button>
+      <button :class="['tab-btn', { active: activeTab === 'sleep' }]" @click="switchTab('sleep')">Exportar</button>
     </div>
 
     <!-- Habits Tab -->
@@ -76,9 +76,24 @@
       </ul>
     </div>
 
-    <!-- Sleep Tab -->
+    <!-- Export Tab -->
     <div class="card" v-if="activeTab === 'sleep'">
-      <p class="coming-soon">Em breve</p>
+      <div class="export-presets">
+        <button :class="['export-preset-btn', { active: exportPreset === 'today' }]" @click="setPreset('today')">Hoje</button>
+        <button :class="['export-preset-btn', { active: exportPreset === 'week' }]" @click="setPreset('week')">Esta semana</button>
+        <button :class="['export-preset-btn', { active: exportPreset === '2weeks' }]" @click="setPreset('2weeks')">2 semanas</button>
+        <button :class="['export-preset-btn', { active: exportPreset === 'month' }]" @click="setPreset('month')">Este mês</button>
+      </div>
+      <div class="export-date-row">
+        <input type="date" v-model="exportStart" @change="exportPreset = ''" />
+        <span>até</span>
+        <input type="date" v-model="exportEnd" @change="exportPreset = ''" />
+      </div>
+      <div class="save-row">
+        <span v-if="exportLoading">Carregando...</span>
+        <button class="save-btn" :disabled="!exportStart || !exportEnd || exportLoading"
+          @click="generateExport">Gerar resumo</button>
+      </div>
     </div>
 
     <!-- Mood Tracking Tab -->

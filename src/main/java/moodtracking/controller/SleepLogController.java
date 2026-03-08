@@ -6,6 +6,8 @@ import moodtracking.repository.SleepLogRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/sleep-log")
 public class SleepLogController {
@@ -14,6 +16,11 @@ public class SleepLogController {
 
     public SleepLogController(SleepLogRepository repository) {
         this.repository = repository;
+    }
+
+    @GetMapping("/range")
+    public List<SleepLog> findByRange(@RequestParam String start, @RequestParam String end) {
+        return repository.findByDateBetween(start, end);
     }
 
     @GetMapping

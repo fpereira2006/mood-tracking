@@ -845,3 +845,11 @@ h1 {
   font-weight: 600;
   text-align: center;
 }
+
+.export-presets { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.export-preset-btn { padding: 6px 14px; border: 1px solid #d1d5db; border-radius: 20px; font-size: 0.85rem; background: #f8fafc; cursor: pointer; transition: all 0.15s; }
+.export-preset-btn:hover { border-color: #4f46e5; color: #4f46e5; }
+.export-preset-btn.active { background: #4f46e5; color: #fff; border-color: #4f46e5; }
+.export-date-row { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.export-date-row input[type="date"] { padding: 7px 10px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 0.9rem; font-family: inherit; outline: none; }
+.export-date-row input[type="date"]:focus { border-color: #4f46e5; }
