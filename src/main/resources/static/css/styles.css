@@ -691,6 +691,36 @@ h1 {
     text-align: center;
     padding: 10px;
   }
+
+  .habit-add-row {
+    flex-wrap: wrap;
+  }
+
+  .habit-add-row .habit-input {
+    flex-basis: 100%;
+  }
+
+  .week-habit-table thead th:first-child {
+    width: 100px;
+  }
+
+  .week-habit-name-cell {
+    max-width: 100px;
+  }
+
+  .icon-grid {
+    left: auto;
+    right: 0;
+    max-width: calc(100vw - 48px);
+  }
+
+  .export-date-row {
+    flex-wrap: wrap;
+  }
+
+  .sleep-quality-btns {
+    flex-wrap: wrap;
+  }
 }
 
 .habit-log-section {
