@@ -25,6 +25,9 @@ public class Habit {
     @Column(name = "icon")
     private String icon;
 
+    @Column(name = "active")
+    private Boolean active;
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -42,4 +45,7 @@ public class Habit {
 
     public String getIcon() { return icon; }
     public void setIcon(String icon) { this.icon = icon; }
+
+    public Boolean getActive() { return active; }
+    public void setActive(Boolean active) { this.active = active; }
 }

@@ -50,6 +50,12 @@
             <span class="habit-icon">{{ habit.icon || '🔲' }}</span>
             <span class="habit-name">{{ habit.name }}</span>
             <div class="habit-actions">
+              <button class="habit-toggle-btn"
+                :class="{ inactive: habit.active === false }"
+                @click="toggleHabitActive(habit.id)"
+                :title="habit.active === false ? 'Ativar' : 'Pausar'">
+                {{ habit.active === false ? '▶' : '⏸' }}
+              </button>
               <button class="habit-edit-btn" @click="startEdit(habit)">Editar</button>
               <button class="habit-delete-btn" @click="deleteHabit(habit.id)">Excluir</button>
             </div>
@@ -142,8 +148,11 @@
           <h3 class="habit-log-title">Habitos</h3>
 
           <ul class="habit-log-list">
-            <li v-for="habit in (habits || []).filter(h => (habitLogs[h.id] ?? null) !== 'DONE')"
-                :key="habit.id" class="habit-log-item"
+            <li v-for="habit in (habits || []).filter(h =>
+                (habitLogs[h.id] ?? null) !== 'DONE' &&
+                (h.active !== false || habitLogs[h.id] != null))"
+                :key="habit.id"
+                :class="['habit-log-item', { 'habit-log-item--inactive': habit.active === false }]"
                 @click="cycleHabitLog(habit.id)">
               <span class="habit-log-status">{{ statusIcon(habitLogs[habit.id]) }}</span>
               <span class="priority-badge" :style="{ backgroundColor: priorityColor(habit.priority ?? 5) }">{{ habit.priority ?? 5 }}</span>
@@ -156,7 +165,8 @@
             <h4 class="habit-log-done-title">Ja realizados</h4>
             <ul class="habit-log-list">
               <li v-for="habit in (habits || []).filter(h => habitLogs[h.id] === 'DONE')"
-                  :key="habit.id" class="habit-log-item habit-log-item--done"
+                  :key="habit.id"
+                  :class="['habit-log-item', 'habit-log-item--done', { 'habit-log-item--inactive': habit.active === false }]"
                   @click="cycleHabitLog(habit.id)">
                 <span class="habit-log-status">✅</span>
                 <span class="priority-badge" :style="{ backgroundColor: priorityColor(habit.priority ?? 5) }">{{ habit.priority ?? 5 }}</span>

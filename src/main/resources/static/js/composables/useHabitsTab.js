@@ -87,6 +87,11 @@ export function useHabitsTab() {
     await loadHabits()
   }
 
+  async function toggleHabitActive(id) {
+    await fetch(`/habits/${id}/toggle`, { method: 'PATCH' })
+    await loadHabits()
+  }
+
   function onDragStart(e, index) {
     dragSrcIndex.value = index
     e.dataTransfer.effectAllowed = 'move'
@@ -126,5 +131,5 @@ export function useHabitsTab() {
     return `hsl(${hue}, 80%, 45%)`
   }
 
-  return { habits, newHabitName, newHabitPriority, newHabitIcon, editingId, editingName, editingPriority, editingIcon, showAddIconPicker, showEditIconPicker, ICONS, error, dragSrcIndex, loadHabits, addHabit, startEdit, saveEdit, cancelEdit, onNewHabitKeyup, onEditKeyup, deleteHabit, onDragStart, onDragOver, onDrop, onDragEnd, priorityColor }
+  return { habits, newHabitName, newHabitPriority, newHabitIcon, editingId, editingName, editingPriority, editingIcon, showAddIconPicker, showEditIconPicker, ICONS, error, dragSrcIndex, loadHabits, addHabit, startEdit, saveEdit, cancelEdit, onNewHabitKeyup, onEditKeyup, deleteHabit, toggleHabitActive, onDragStart, onDragOver, onDrop, onDragEnd, priorityColor }
 }

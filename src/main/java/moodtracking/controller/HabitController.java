@@ -25,8 +25,8 @@ public class HabitController {
     public List<Habit> findAll() {
         return repository.findAll().stream()
                 .sorted(Comparator
-                        .comparingInt((Habit h) -> h.getPriority() == null ? Integer.MIN_VALUE : h.getPriority())
-                        .reversed()
+                        .<Habit, Integer>comparing(h -> Boolean.FALSE.equals(h.getActive()) ? 1 : 0)
+                        .thenComparing(h -> h.getPriority() == null ? 0 : h.getPriority(), Comparator.reverseOrder())
                         .thenComparingInt(h -> h.getPosition() == null ? Integer.MAX_VALUE : h.getPosition()))
                 .toList();
     }
@@ -49,6 +49,11 @@ public class HabitController {
         if (request.icon() != null) {
             habit.setIcon(request.icon());
         }
+        if (request.active() != null) {
+            habit.setActive(request.active());
+        } else if (habit.getActive() == null) {
+            habit.setActive(true);
+        }
         if (habit.getPosition() == null) {
             int max = repository.findAll().stream()
                     .mapToInt(h -> h.getPosition() == null ? 0 : h.getPosition())
@@ -69,6 +74,14 @@ public class HabitController {
             });
         }
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}/toggle")
+    public ResponseEntity<Habit> toggle(@PathVariable Long id) {
+        return repository.findById(id).map(h -> {
+            h.setActive(Boolean.FALSE.equals(h.getActive()));
+            return ResponseEntity.ok(repository.save(h));
+        }).orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")

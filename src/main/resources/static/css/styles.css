@@ -727,6 +727,13 @@ h1 {
   text-decoration: line-through;
 }
 
+.habit-toggle-btn { padding: 4px 8px; background: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer; font-size: 12px; transition: all 0.15s; }
+.habit-toggle-btn:hover { border-color: #4f46e5; }
+.habit-toggle-btn.inactive { background: #dcfce7; color: #16a34a; border-color: #bbf7d0; }
+
+.habit-log-item--inactive .habit-log-name { color: #94a3b8; font-style: italic; }
+.habit-log-item--inactive .habit-log-status { opacity: 0.5; }
+
 .habit-log-done-section {
   margin-top: 12px;
 }

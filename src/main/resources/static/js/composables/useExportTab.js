@@ -144,24 +144,27 @@ export function useExportTab() {
           if (!hlMap[l.habitId]) hlMap[l.habitId] = {}
           hlMap[l.habitId][l.date] = l.status
         })
-        const dayNums = days.map(d => d.split('-')[2])
-        lines.push('\u2500\u2500 H\u00c1BITOS \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500')
-        lines.push(`H\u00e1bito          | ${dayNums.join(' | ')} | Total`)
-        lines.push(`----------------|${dayNums.map(() => '---').join('-|-')}-|-------`)
-        for (const habit of habits) {
-          const logsByDate = hlMap[habit.id] || {}
-          const cells = days.map(d => {
-            const st = logsByDate[d]
-            if (st === 'DONE')     return '\u2705'
-            if (st === 'NOT_DONE') return '\u274c'
-            if (st === 'IGNORE')   return '\u2796'
-            return '  '
-          })
-          const done = days.filter(d => logsByDate[d] === 'DONE').length
-          const name = `${habit.icon || ''} ${habit.name}`.substring(0, 14).padEnd(14)
-          lines.push(`${name} | ${cells.join(' | ')} | ${done}/${days.length}`)
+        const visibleHabits = habits.filter(h => h.active !== false || hlMap[h.id])
+        if (visibleHabits.length > 0) {
+          const dayNums = days.map(d => d.split('-')[2])
+          lines.push('\u2500\u2500 H\u00c1BITOS \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500')
+          lines.push(`H\u00e1bito          | ${dayNums.join(' | ')} | Total`)
+          lines.push(`----------------|${dayNums.map(() => '---').join('-|-')}-|-------`)
+          for (const habit of visibleHabits) {
+            const logsByDate = hlMap[habit.id] || {}
+            const cells = days.map(d => {
+              const st = logsByDate[d]
+              if (st === 'DONE')     return '\u2705'
+              if (st === 'NOT_DONE') return '\u274c'
+              if (st === 'IGNORE')   return '\u2796'
+              return '  '
+            })
+            const done = days.filter(d => logsByDate[d] === 'DONE').length
+            const name = `${habit.icon || ''} ${habit.name}`.substring(0, 14).padEnd(14)
+            lines.push(`${name} | ${cells.join(' | ')} | ${done}/${days.length}`)
+          }
+          lines.push('')
         }
-        lines.push('')
       }
 
       // NOTAS
