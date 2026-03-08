@@ -12,9 +12,12 @@
   <div id="app" class="app-wrapper" v-cloak>
     <div class="top-bar">
       <h1>Rotina</h1>
-      <form method="post" action="/logout">
-        <button type="submit" class="logout-btn">Sair</button>
-      </form>
+      <div class="top-bar-actions">
+        <button class="theme-btn" @click="cycleTheme" :title="theme">{{ themeLabel }}</button>
+        <form method="post" action="/logout">
+          <button type="submit" class="logout-btn">Sair</button>
+        </form>
+      </div>
     </div>
 
     <div class="tabs">

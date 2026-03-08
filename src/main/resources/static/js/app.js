@@ -5,6 +5,7 @@ import { useWeekView } from './composables/useWeekView.js'
 import { usePromptGenerator } from './composables/usePromptGenerator.js'
 import { useHabitsTab } from './composables/useHabitsTab.js'
 import { useExportTab } from './composables/useExportTab.js'
+import { useTheme } from './composables/useTheme.js'
 
 createApp({
   setup() {
@@ -22,6 +23,7 @@ createApp({
       habits: habitsTab.habits,
     })
     const exportTab = useExportTab()
+    const themeComp = useTheme()
 
     function switchTab(tab) {
       mood.activeTab.value = tab
@@ -41,6 +43,7 @@ createApp({
       ...prompt,
       ...habitsTab,
       ...exportTab,
+      ...themeComp,
       switchTab,
       dayLabels: DAY_LABELS,
       emojis: EMOJIS,

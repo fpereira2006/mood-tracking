@@ -1,15 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login — Mood Tracking</title>
+  <title>Login — Rotina</title>
   <style>
+    :root {
+      --bg-page:      #f0f2f5;
+      --bg-card:      #ffffff;
+      --bg-input:     #f8fafc;
+      --text-title:   #1a1a2e;
+      --text-body:    #374151;
+      --text-muted:   #6b7280;
+      --border-input: #d1d5db;
+      --primary:      #6366f1;
+      --primary-dark: #4f46e5;
+      --error-bg:     #fef2f2;
+      --error-border: #fecaca;
+      --error-text:   #dc2626;
+      --shadow-card:  rgba(0,0,0,0.08);
+    }
+
+    .theme-dark {
+      --bg-page:      #0f172a;
+      --bg-card:      #1e293b;
+      --bg-input:     #0f172a;
+      --text-title:   #f1f5f9;
+      --text-body:    #cbd5e1;
+      --text-muted:   #94a3b8;
+      --border-input: #475569;
+      --primary:      #818cf8;
+      --primary-dark: #6366f1;
+      --error-bg:     #450a0a;
+      --error-border: #7f1d1d;
+      --error-text:   #f87171;
+      --shadow-card:  rgba(0,0,0,0.30);
+    }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: #f0f2f5;
+      background: var(--bg-page);
       min-height: 100vh;
       display: flex;
       align-items: center;
@@ -18,9 +50,9 @@
     }
 
     .card {
-      background: white;
+      background: var(--bg-card);
       border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      box-shadow: 0 2px 8px var(--shadow-card);
       padding: 40px 32px;
       width: 100%;
       max-width: 360px;
@@ -29,13 +61,13 @@
     h1 {
       font-size: 1.4rem;
       font-weight: 700;
-      color: #1a1a2e;
+      color: var(--text-title);
       margin-bottom: 8px;
     }
 
     .subtitle {
       font-size: 0.875rem;
-      color: #6b7280;
+      color: var(--text-muted);
       margin-bottom: 28px;
     }
 
@@ -43,30 +75,32 @@
       display: block;
       font-size: 0.875rem;
       font-weight: 500;
-      color: #374151;
+      color: var(--text-body);
       margin-bottom: 6px;
     }
 
     input {
       width: 100%;
       padding: 10px 12px;
-      border: 1px solid #d1d5db;
+      border: 1px solid var(--border-input);
       border-radius: 8px;
       font-size: 0.9rem;
       outline: none;
       transition: border-color 0.15s;
       margin-bottom: 16px;
+      background: var(--bg-input);
+      color: var(--text-body);
     }
 
     input:focus {
-      border-color: #6366f1;
+      border-color: var(--primary);
       box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
     }
 
     button {
       width: 100%;
       padding: 11px;
-      background: #6366f1;
+      background: var(--primary);
       color: white;
       border: none;
       border-radius: 8px;
@@ -76,36 +110,42 @@
       transition: background 0.15s;
     }
 
-    button:hover { background: #4f46e5; }
+    button:hover { background: var(--primary-dark); }
 
     .error {
-      background: #fef2f2;
-      border: 1px solid #fecaca;
-      color: #dc2626;
+      background: var(--error-bg);
+      border: 1px solid var(--error-border);
+      color: var(--error-text);
       border-radius: 8px;
       padding: 10px 14px;
       font-size: 0.875rem;
       margin-bottom: 20px;
     }
   </style>
+  <script>
+    (function () {
+      var t = localStorage.getItem('app-theme');
+      if (t === 'theme-dark') document.documentElement.classList.add('theme-dark');
+    })();
+  </script>
 </head>
 <body>
   <div class="card">
-    <h1>Mood Tracking</h1>
-    <p class="subtitle">Sign in to continue</p>
+    <h1>Rotina</h1>
+    <p class="subtitle">Entre para continuar</p>
 
     <div id="errorMsg" class="error" style="display:none">
-      Invalid username or password.
+      Usuário ou senha inválidos.
     </div>
 
     <form method="post" action="/login">
-      <label for="username">Username</label>
+      <label for="username">Usuário</label>
       <input type="text" id="username" name="username" autocomplete="username" autofocus>
 
-      <label for="password">Password</label>
+      <label for="password">Senha</label>
       <input type="password" id="password" name="password" autocomplete="current-password">
 
-      <button type="submit">Sign in</button>
+      <button type="submit">Entrar</button>
     </form>
   </div>
 
