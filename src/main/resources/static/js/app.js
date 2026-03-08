@@ -10,6 +10,7 @@ createApp({
   setup() {
     const mood = useMoodTab()
     const week = useWeekView({ todayStr: mood.todayStr })
+    const habitsTab = useHabitsTab()
     const prompt = usePromptGenerator({
       todayStr: mood.todayStr,
       weekDays: week.weekDays,
@@ -17,8 +18,9 @@ createApp({
       weekNote: week.weekNote,
       weekScore: week.weekScore,
       weekDayNotes: week.weekDayNotes,
+      weekHabitLogs: week.weekHabitLogs,
+      habits: habitsTab.habits,
     })
-    const habitsTab = useHabitsTab()
     const exportTab = useExportTab()
 
     function switchTab(tab) {

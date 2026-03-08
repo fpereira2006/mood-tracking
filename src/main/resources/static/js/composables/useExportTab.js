@@ -148,8 +148,9 @@ export function useExportTab() {
         if (visibleHabits.length > 0) {
           const dayNums = days.map(d => d.split('-')[2])
           lines.push('\u2500\u2500 H\u00c1BITOS \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500')
-          lines.push(`H\u00e1bito          | ${dayNums.join(' | ')} | Total`)
-          lines.push(`----------------|${dayNums.map(() => '---').join('-|-')}-|-------`)
+          const colWidth = Math.max(16, ...visibleHabits.map(h => `${h.icon || ''} ${h.name}`.length))
+          lines.push(`${'H\u00e1bito'.padEnd(colWidth)} | ${dayNums.join(' | ')} | Total`)
+          lines.push(`${'-'.repeat(colWidth)}-|${dayNums.map(() => '---').join('-|-')}-|-------`)
           for (const habit of visibleHabits) {
             const logsByDate = hlMap[habit.id] || {}
             const cells = days.map(d => {
@@ -160,7 +161,7 @@ export function useExportTab() {
               return '  '
             })
             const done = days.filter(d => logsByDate[d] === 'DONE').length
-            const name = `${habit.icon || ''} ${habit.name}`.substring(0, 14).padEnd(14)
+            const name = `${habit.icon || ''} ${habit.name}`.padEnd(colWidth)
             lines.push(`${name} | ${cells.join(' | ')} | ${done}/${days.length}`)
           }
           lines.push('')
