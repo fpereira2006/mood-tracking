@@ -1,7 +1,7 @@
 import { ref } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
 import { DAY_LABELS, SLOTS, emojiName } from '../constants.js'
 
-export function usePromptGenerator({ todayStr, weekDays, weekEntries, weekNote, weekScore, weekDayNotes }) {
+export function usePromptGenerator({ todayStr, weekDays, weekEntries, weekNote, weekScore, weekDayNotes, weekHabitLogs, habits }) {
   const showPromptModal = ref(false)
   const generatedPrompt = ref('')
   const promptCopied = ref(false)
@@ -67,6 +67,37 @@ export function usePromptGenerator({ todayStr, weekDays, weekEntries, weekNote, 
       ? `## Observações por dia:\n${dayNoteLines.join('\n')}`
       : ''
 
+    const hlMap = weekHabitLogs.value || {}
+    const visibleHabits = (habits.value || []).filter(h =>
+      h.active !== false || hlMap[h.id]
+    )
+
+    let habitsPart = ''
+    if (visibleHabits.length > 0) {
+      const activeDays = days.filter(d => !inProgress || d <= todayStr)
+      const dayHeaders = activeDays.map(d => {
+        const dow = new Date(d + 'T12:00:00').getDay()
+        return DAY_LABELS[dow].substring(0, 3)
+      })
+      const colWidth = Math.max(14, ...visibleHabits.map(h => `${h.icon || ''} ${h.name}`.length))
+      const rows = visibleHabits.map(h => {
+        const logs = hlMap[h.id] || {}
+        const cells = activeDays.map(d => {
+          const st = logs[d]
+          if (st === 'DONE')     return '✅'
+          if (st === 'NOT_DONE') return '❌'
+          if (st === 'IGNORE')   return '➖'
+          return '–'
+        })
+        const done = activeDays.filter(d => logs[d] === 'DONE').length
+        const recorded = activeDays.filter(d => logs[d] && logs[d] !== 'IGNORE').length
+        const name = `${h.icon || ''} ${h.name}`.padEnd(colWidth)
+        return `| ${name} | ${cells.join(' | ')} | ${done}/${recorded} |`
+      })
+      const sep = `|${'-'.repeat(colWidth + 2)}|${activeDays.map(() => '-----').join('|')}|--------|`
+      habitsPart = `## Hábitos da semana:\n| ${'Hábito'.padEnd(colWidth)} | ${dayHeaders.join(' | ')} | Feitos |\n${sep}\n${rows.join('\n')}`
+    }
+
     generatedPrompt.value = [
       headerPart,
       '',
@@ -77,6 +108,7 @@ export function usePromptGenerator({ todayStr, weekDays, weekEntries, weekNote, 
       '',
       `${noteLabel}: ${noteText}`,
       ...(dayNotesPart ? ['', dayNotesPart] : []),
+      ...(habitsPart ? ['', habitsPart] : []),
       '',
       questionsPart,
     ].join('\n')
