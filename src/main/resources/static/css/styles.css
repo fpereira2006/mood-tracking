@@ -830,6 +830,15 @@ h1 {
   .sleep-quality-btns {
     flex-wrap: wrap;
   }
+
+  .habit-item {
+    flex-wrap: wrap;
+  }
+
+  .habit-actions {
+    flex-basis: 100%;
+    justify-content: flex-end;
+  }
 }
 
 .habit-log-section {
