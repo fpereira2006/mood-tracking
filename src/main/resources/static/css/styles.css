@@ -863,6 +863,8 @@ h1 {
 
 .week-habit-section {
   margin-top: 12px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .week-habit-table thead th:first-child {
