@@ -273,7 +273,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="habit in (habits || [])" :key="habit.id">
+              <tr v-for="habit in (habits || []).filter(h => h.active !== false || (weekHabitLogs[h.id] && Object.keys(weekHabitLogs[h.id]).length > 0))" :key="habit.id">
                 <td class="week-habit-name-cell" :title="habit.name">
                   <span class="priority-badge" :style="{ backgroundColor: priorityColor(habit.priority ?? 5) }">{{ habit.priority ?? 5 }}</span>
                   {{ habit.icon || '🔲' }} {{ habit.name }}

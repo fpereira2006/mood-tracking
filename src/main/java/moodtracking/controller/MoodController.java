@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -33,7 +34,9 @@ public class MoodController {
 
     @GetMapping
     public List<MoodEntry> getByDate(@RequestParam String date) {
-        return repository.findByDate(date);
+        List<MoodEntry> entries = repository.findByDate(date);
+        entries.forEach(this::sortEmojiCode);
+        return entries;
     }
 
     @PostMapping
@@ -59,12 +62,16 @@ public class MoodController {
     public List<MoodEntry> getByMonth(@RequestParam int year, @RequestParam int month) {
         LocalDate first = LocalDate.of(year, month, 1);
         LocalDate last = first.withDayOfMonth(first.lengthOfMonth());
-        return repository.findByDateBetween(first.toString(), last.toString());
+        List<MoodEntry> entries = repository.findByDateBetween(first.toString(), last.toString());
+        entries.forEach(this::sortEmojiCode);
+        return entries;
     }
 
     @GetMapping("/week")
     public List<MoodEntry> getByWeek(@RequestParam String start, @RequestParam String end) {
-        return repository.findByDateBetween(start, end);
+        List<MoodEntry> entries = repository.findByDateBetween(start, end);
+        entries.forEach(this::sortEmojiCode);
+        return entries;
     }
 
     @GetMapping("/week-summary")
@@ -100,5 +107,13 @@ public class MoodController {
     @GetMapping("/day-notes")
     public List<DayNote> getDayNotes(@RequestParam String start, @RequestParam String end) {
         return dayNoteRepo.findByDateBetween(start, end);
+    }
+
+    private void sortEmojiCode(MoodEntry entry) {
+        String code = entry.getEmojiCode();
+        if (code == null || !code.contains(",")) return;
+        String[] parts = code.split(",");
+        Arrays.sort(parts);
+        entry.setEmojiCode(String.join(",", parts));
     }
 }
